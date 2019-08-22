@@ -25,8 +25,8 @@ const getDetail = (id) => {
 }
 
 const newBlog = (blogData = {}) => {
-	// blogData 是一个博客对象， 包含 title content author 属性
-	const title = blogData.title
+	  // blogData 是一个博客对象， 包含 title content author 属性
+	  const title = blogData.title
     const content = blogData.content
     const author = blogData.author
     const createtime = Date.parse(new Date());

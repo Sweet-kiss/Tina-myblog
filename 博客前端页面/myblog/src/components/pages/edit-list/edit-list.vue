@@ -1,11 +1,11 @@
 <template>
   <div class="addNew">
-    <h2 class="title"> <span class="back"><img src="./img/arr-l.png" alt=""></span>添加博客</h2>
+    <h2 class="title"> <span class="back"><img src="./img/arr-l.png" alt=""></span>编辑博客</h2>
     <div class="formmat">
     	<div class="blog_title"><input type="text" v-model="title" placeholder="请输入标题"></div>
     	<div class="blog_desc"><textarea v-model="content" name="" id="" cols="30" rows="10"></textarea></div>
     </div>
-    <div class="login_btn" @click="addBlogList">提交</div>
+    <div class="login_btn">提交</div>
   </div>
 </template>
 
@@ -17,37 +17,12 @@ export default {
     	 content: ''
     }
 	},
+	created(){
+    this._getDetailList()
+	},
 	methods: {
-    addBlogList () {
-    	var title = this.title
-    	var content = this.content
-    	console.log(title, content)
-    	let data = {
-    		title: title,
-    		content: content
-    	}
-
-    	let url = '/api/blog/new'
-    	let _this = this
-
-			this.$axios({
-			    method: 'post',
-			    url: url, 
-			    data: data              
-			  }).then(function(res){
-			    console.log(res.data)
-			    var result = res.data
-			    if(result.errno==0) {
-			    	alert("插入成功！")
-            _this.$router.push({path: '/bloglist'})
-			    }
-
-			  }).catch(function(err){
-			         console.log(err)
-			  })
-
-
-
+    _getDetailList () {
+      console.log(this.$route.query.id,"lll")
     }
 	}
 }

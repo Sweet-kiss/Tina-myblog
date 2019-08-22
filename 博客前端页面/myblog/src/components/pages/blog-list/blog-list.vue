@@ -1,17 +1,17 @@
 <template>
   <div class="bloglist_wrap">
-     <h2 class="title">我的博客 <span class="add_new"></span></h2>
+     <h2 class="title">我的博客 <span class="add_new" @click="addNew"></span></h2>
      <div class="search_wrap">
      	 <div class="search"><input type="text" placeholder="请输入关键字"> <span class="search_icon"><img src="./img/search_icon.png" alt=""></span></div>
      </div>
      <ul class="list_wrp">
-     	<li v-for="item in blogLists">
+     	<li v-for="(item,index) in blogLists">
      		<p>{{item.title}}</p>
      		<p>{{item.content}}</p>
        <div>
        	  <span>{{item.createtime}}</span>
        	  <span>删除</span>
-       	  <span>编辑</span>
+       	  <span @click="edit(index)">编辑</span>
        </div>
      	</li>
      </ul>
@@ -29,20 +29,26 @@ export default {
   	this._getBlogLists()
   },
   methods: {
-  	_getBlogLists () {
-  	  let  _this = this;
-      let url="http://127.0.0.1:3000/api/blog/list";
-      console.log(url)
-	  this.$axios({
-	    method: 'get',
-	    url: url,               
-	  }).then(function(res){
-	    //console.log(res.data)
-	    _this.blogLists = res.data.data;
-	    console.log(_this.blogLists)
-	  }).catch(function(err){
-	         console.log(err)
-	  })
+	  	_getBlogLists () {
+	  	  let  _this = this;
+	      let url="/api/blog/list?isadmin=1";
+	      console.log(url)
+		  this.$axios({
+		    method: 'get',
+		    url: url,               
+		  }).then(function(res){
+		    //console.log(res.data)
+		    _this.blogLists = res.data.data;
+		    console.log(_this.blogLists)
+		  }).catch(function(err){
+		         console.log(err)
+		  })
+  	},
+  	addNew () {
+  		this.$router.push({path: '/addList'})
+  	},
+  	edit(index){
+  		this.$router.push({path: '/editLsit', query:{id: index}})
   	}
   }
 }
@@ -74,7 +80,7 @@ export default {
 .list_wrp li {
 	padding:10px 15px;
 	overflow: hidden;
-	border-bottom: #b2b2b2 solid 1px;
+	border-bottom: #f0edee solid 1px;
 }
 .search {
 	position: relative;

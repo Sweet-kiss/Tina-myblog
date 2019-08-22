@@ -32,7 +32,7 @@ export default {
 				password: password
 			}
 
-      let url = 'http://localhost:3000/api/user/login'
+      let url = '/api/user/login'
       var _this = this
 			this.$axios({
 			    method: 'post',
