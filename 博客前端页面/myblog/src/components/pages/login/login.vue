@@ -10,7 +10,7 @@
      	  <span class="icon_in"><input type="text" placeholder="请输入密码" v-model="password"></span>
      	</div>
      </div>
-     <div class="login_btn" @click="login">登录</div>
+     <div class="login_btn" v-on:click.stop="login">登录</div>
   </div>
 </template>
 
@@ -27,6 +27,30 @@ export default {
 			let username = this.username
 			let password = this.password
 			console.log(username,password)
+			let data = {
+				username: username,
+				password: password
+			}
+
+      let url = 'http://localhost:3000/api/user/login'
+      var _this = this
+			this.$axios({
+			    method: 'post',
+			    url: url, 
+			    data: data              
+			  }).then(function(res){
+			    console.log(res.data)
+			    let Err_ok = res.data.errno
+			    if(Err_ok==0){
+			    	alert("登录成功");
+			    	_this.$router.push({path:'/bloglist'})
+			    }else {
+			    	alert("登录失败！")
+			    }
+
+			  }).catch(function(err){
+			         console.log(err)
+			  })
 		}
 	}
 }

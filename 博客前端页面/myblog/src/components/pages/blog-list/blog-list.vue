@@ -7,9 +7,9 @@
      <ul class="list_wrp">
      	<li v-for="item in blogLists">
      		<p>{{item.title}}</p>
-     		<p>{{item.desc}}</p>
+     		<p>{{item.content}}</p>
        <div>
-       	  <span>{{item.time}}</span>
+       	  <span>{{item.createtime}}</span>
        	  <span>删除</span>
        	  <span>编辑</span>
        </div>
@@ -22,33 +22,27 @@
 export default {
   data () {
   	return {
-  		blogLists: [
-  		  {
-  		  	title: '一步步带你实现web全景看房——three.js',
-  		  	desc: 'canvas画2d相信大家都很熟悉了，但3d世界更加炫酷。我们直接从three.js入手。下面我们从0开始来摸索一下3d世界',
-  		  	time: '2019-03-12'
-  		  },
-  		  {
-  		  	title: 'Vue：一步一步解析Axios源码，从入门到原理',
-  		  	desc: 'Axios 是一个基于 promise 的 HTTP 库，可以用在浏览器和 node.js 中',
-  		  	time: '2019-04-03'
-  		  },
-  		  {
-  		  	title: 'vue组件通信与常用技巧分享',
-  		  	desc: '组件是vue.js 最强大功能之一，组件的作用域是相互独立的，这就意味着不同组件之间的数据是无法相互引用，所以就有了各种组件通信方式。',
-  		  	time: '2019-04-15'
-  		  },
-  		  {
-  		  	title: 'vue组件通信与常用技巧分享',
-  		  	desc: '组件是vue.js 最强大功能之一，组件的作用域是相互独立的，这就意味着不同组件之间的数据是无法相互引用，所以就有了各种组件通信方式。',
-  		  	time: '2019-04-15'
-  		  },
-  		  {
-  		  	title: 'vue组件通信与常用技巧分享',
-  		  	desc: '组件是vue.js 最强大功能之一，组件的作用域是相互独立的，这就意味着不同组件之间的数据是无法相互引用，所以就有了各种组件通信方式。',
-  		  	time: '2019-04-15'
-  		  }  		    		  
-  		]
+  		blogLists: ""
+  	}
+  },
+  created () {
+  	this._getBlogLists()
+  },
+  methods: {
+  	_getBlogLists () {
+  	  let  _this = this;
+      let url="http://127.0.0.1:3000/api/blog/list";
+      console.log(url)
+	  this.$axios({
+	    method: 'get',
+	    url: url,               
+	  }).then(function(res){
+	    //console.log(res.data)
+	    _this.blogLists = res.data.data;
+	    console.log(_this.blogLists)
+	  }).catch(function(err){
+	         console.log(err)
+	  })
   	}
   }
 }
