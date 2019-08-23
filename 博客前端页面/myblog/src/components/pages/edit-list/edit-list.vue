@@ -2,10 +2,14 @@
   <div class="addNew">
     <h2 class="title"> <span class="back"><img src="./img/arr-l.png" alt=""></span>编辑博客</h2>
     <div class="formmat">
-    	<div class="blog_title"><input type="text" v-model="title" placeholder="请输入标题"></div>
-    	<div class="blog_desc"><textarea v-model="content" name="" id="" cols="30" rows="10"></textarea></div>
+    	<div class="blog_title">
+    		<input v-model="title" type="text" placeholder="请输入标题">
+    	</div>
+    	<div class="blog_desc">
+    		<textarea v-model="content" name="" id="" cols="30" rows="10"></textarea>
+    	</div>
     </div>
-    <div class="login_btn">提交</div>
+    <div class="login_btn" @click="updata()">提交</div>
   </div>
 </template>
 
@@ -13,8 +17,9 @@
 export default {
 	data () {
     return {
-    	 title: '',
-    	 content: ''
+    	title:'',
+    	content: '',
+    	id: ''
     }
 	},
 	created(){
@@ -23,6 +28,47 @@ export default {
 	methods: {
     _getDetailList () {
       console.log(this.$route.query.id,"lll")
+      let id = this.$route.query.id
+      let url="/api/blog/detail?id="+id;
+      let _this = this;
+	    console.log(url)
+		  this.$axios({
+		    method: 'get',
+		    url: url,               
+		  }).then(function(res){
+		  	console.log(res.data.data)
+		    _this.detailData = res.data.data
+        _this.title = _this.detailData.title
+        _this.content = _this.detailData.content 
+        _this.id = _this.detailData.id   
+
+		  }).catch(function(err){
+		         console.log(err)
+		  })
+    },
+    updata(){
+      let url="/api/blog/update?id="+this.id;
+      let _this = this;
+      let data = {
+      	title: this.title,
+      	content: this.content
+      }
+	    console.log(url)
+	    console.log(data)
+		  this.$axios({
+		    method: 'post',
+		    url: url, 
+		    data: data              
+		  }).then(function(res){
+         console.log(res.data)
+         let code =  res.data.errno
+         if(code == 0) {
+         	  _this.$router.push({path: '/bloglist'})
+         } 
+
+		  }).catch(function(err){
+		         console.log(err)
+		  })      
     }
 	}
 }

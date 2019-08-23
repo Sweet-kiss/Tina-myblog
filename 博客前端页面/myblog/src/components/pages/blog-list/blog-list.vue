@@ -2,7 +2,12 @@
   <div class="bloglist_wrap">
      <h2 class="title">我的博客 <span class="add_new" @click="addNew"></span></h2>
      <div class="search_wrap">
-     	 <div class="search"><input type="text" placeholder="请输入关键字"> <span class="search_icon"><img src="./img/search_icon.png" alt=""></span></div>
+     	 <div class="search">
+     	 	 <input type="text" v-model="searchText" placeholder="请输入关键字"> 
+     	 	 <span class="search_icon">
+     	 	 	<img src="./img/del_cha.png" alt="">
+     	 	 </span>
+     	 </div>
      </div>
      <ul class="list_wrp">
      	<li v-for="(item,index) in blogLists">
@@ -10,7 +15,7 @@
      		<p>{{item.content}}</p>
        <div>
        	  <span>{{item.createtime}}</span>
-       	  <span>删除</span>
+       	  <span @click="del(index)">删除</span>
        	  <span @click="edit(index)">编辑</span>
        </div>
      	</li>
@@ -22,7 +27,8 @@
 export default {
   data () {
   	return {
-  		blogLists: ""
+  		blogLists: "",
+  		searchText: ""
   	}
   },
   created () {
@@ -48,7 +54,26 @@ export default {
   		this.$router.push({path: '/addList'})
   	},
   	edit(index){
-  		this.$router.push({path: '/editLsit', query:{id: index}})
+  		let list_id = this.blogLists[index].id
+  		this.$router.push({path: '/editLsit', query:{id: list_id}})
+  	},
+  	del (index) {
+  		var _this = this
+	    let url="/api/blog/del?id="+this.blogLists[index].id;
+	      console.log(url)
+		  this.$axios({
+		    method: 'post',
+		    url: url,               
+		  }).then(function(res){
+		    console.log(res.data)
+		    let code = res.data.errno
+		    if(code==0){
+          alert("删除成功！")
+          _this._getBlogLists()
+		    }
+		  }).catch(function(err){
+		         console.log(err)
+		  })      
   	}
   }
 }
@@ -104,7 +129,7 @@ export default {
 	outline: none;
 }
 .search_icon {
-	display: block;
+	display: none;
 	width: 30px;
 	height: 30px;
 	line-height: 30px;
@@ -117,6 +142,7 @@ export default {
 }
 .search_icon img {
 	width: 85%;
+	margin-top: 2px;
 }
 .list_wrp li p:first-child {
 	font-size: 18px;

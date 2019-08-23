@@ -38,6 +38,7 @@ router.get('/list', (req, res, next) => {
 });
 
 
+
 //插入新blog
 router.post('/new', (req, res, next) => {
    req.body.author = req.session.username
@@ -49,7 +50,45 @@ router.post('/new', (req, res, next) => {
    })
 })
 
+router.get('/detail', (req, res, next) => {
+  const result = getDetail(req.query.id)
+  return result.then(data => {
+      res.json(
+    new SuccessModel(data)
+    )
+  })
+});
 
+router.post('/update', (req, res, next) => {
+  const result = updateBlog(req.query.id, req.body)
+  return result.then(val => {
+    if (val) {
+      res.json(
+        new SuccessModel()
+      )
+    } else {
+      res.json(
+        new ErrorModel('更新博客失败')              
+      )
+    }   
+  })  
+})
+
+router.post('/del', (req, res, next) => {
+  const author = req.session.username
+  const result = delBlog(req.query.id, author)
+  return result.then(val => {
+    if (val) {
+        res.json(
+            new SuccessModel()
+          )
+      } else {
+        res.json(
+            new ErrorModel('删除客失败')             
+        )
+      }
+  })    
+})
 
 
 module.exports = router;
