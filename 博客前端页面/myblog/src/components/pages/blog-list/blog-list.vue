@@ -3,8 +3,9 @@
      <h2 class="title">我的博客 <span class="add_new" @click="addNew"></span></h2>
      <div class="search_wrap">
      	 <div class="search">
-     	 	 <input type="text" v-model="searchText" placeholder="请输入关键字"> 
-     	 	 <span class="search_icon">
+     	 	 <input type="text" v-model="searchText" placeholder="请输入关键字"
+     	 	  v-on:change="listenKeyword"> 
+     	 	 <span class="search_icon" v-show="isShow" @click="clearInput">
      	 	 	<img src="./img/del_cha.png" alt="">
      	 	 </span>
      	 </div>
@@ -28,7 +29,8 @@ export default {
   data () {
   	return {
   		blogLists: "",
-  		searchText: ""
+  		searchText: "",
+  		isShow: false
   	}
   },
   created () {
@@ -74,6 +76,37 @@ export default {
 		  }).catch(function(err){
 		         console.log(err)
 		  })      
+  	},
+    listenKeyword () {
+    	console.log(this.searchText,"kkkkk")
+    	let search_result = []
+    	let _this = this
+    	if(this.searchText) {
+    		_this.isShow = true
+    		console.log(this.isShow)
+    	for(let i=0; i<_this.blogLists.length; i++) {
+    		if(_this.blogLists[i].title.indexOf(_this.searchText)>-1||_this.blogLists[i].content.indexOf(_this.searchText)>-1) {
+            search_result.push(_this.blogLists[i])
+    		}
+    	}
+    	console.log(search_result,"搜索结果")
+    	_this.blogLists = search_result
+    	}else {
+         _this.isShow = false
+         _this._getBlogLists()
+    	}
+    },
+    clearInput () {
+    	this.searchText=""
+    	this.isShow = false
+    	this._getBlogLists()
+    }
+  },
+  watch: {
+  	searchText(){
+  		if(this.searchText===""){
+         this._getBlogLists()
+  		}
   	}
   }
 }
@@ -129,7 +162,7 @@ export default {
 	outline: none;
 }
 .search_icon {
-	display: none;
+	display: block;
 	width: 30px;
 	height: 30px;
 	line-height: 30px;

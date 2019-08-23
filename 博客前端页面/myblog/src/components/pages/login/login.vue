@@ -11,15 +11,22 @@
      	</div>
      </div>
      <div class="login_btn" v-on:click.stop="login">登录</div>
+     <modal-fom v-show="isShow" :msg="msg"></modal-fom>
   </div>
 </template>
 
 <script>
+import ModalFom from '@/components/base/modal/modal'
 export default {
+	components: {
+    ModalFom
+	},
 	data () {
     return {
     	username: "",
-    	password: ""
+    	password: "",
+    	isShow: false,
+    	msg: "登录成功！"
     }
 	},
 	methods: {
@@ -42,8 +49,11 @@ export default {
 			    console.log(res.data)
 			    let Err_ok = res.data.errno
 			    if(Err_ok==0){
-			    	alert("登录成功");
-			    	_this.$router.push({path:'/bloglist'})
+			    	//alert("登录成功");
+			    	_this.isShow = true			    	
+			    	setTimeout(function(){ 
+			    		_this.$router.push({path:'/bloglist'})
+			    	}, 1000);
 			    }else {
 			    	alert("登录失败！")
 			    }
