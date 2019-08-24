@@ -10,16 +10,23 @@
     	</div>
     </div>
     <div class="login_btn" @click="updata()">提交</div>
+    <modal-fom v-show="isShow" :msg="msg"></modal-fom>
   </div>
 </template>
 
 <script>
+import ModalFom from '@/components/base/modal/modal'
 export default {
+	components: {
+    ModalFom
+	},	
 	data () {
     return {
     	title:'',
     	content: '',
-    	id: ''
+    	id: '',
+    	isShow: false,
+    	msg: ""
     }
 	},
 	created(){
@@ -63,8 +70,19 @@ export default {
          console.log(res.data)
          let code =  res.data.errno
          if(code == 0) {
-         	  _this.$router.push({path: '/bloglist'})
-         } 
+         	_this.isShow = true
+         	_this.msg = "编辑成功"
+		    	setTimeout(function(){ 
+			    	_this.$router.push({path:'/bloglist'})
+			    }, 1000)
+        }else{
+        	_this.isShow = true
+         	_this.msg = "编辑失败"
+          setTimeout(function(){ 
+          	_this.isShow = false
+			    	_this._getDetailList()
+			    }, 1000)
+        } 
 
 		  }).catch(function(err){
 		         console.log(err)

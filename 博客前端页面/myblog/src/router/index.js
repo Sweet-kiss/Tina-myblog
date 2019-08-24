@@ -4,6 +4,7 @@ import Login from '@/components/pages/login/login'
 import BlogList from '@/components/pages/blog-list/blog-list'
 import AddList from '@/components/pages/add-list/add-list'
 import EditLsit from '@/components/pages/edit-list/edit-list'
+import BlogDetail from '@/components/pages/blog-detail/blog-detail'
 
 Vue.use(Router)
 
@@ -29,6 +30,11 @@ export default new Router({
       path: '/editLsit',
       name: 'EditLsit',
       component: EditLsit
+    },
+    {
+      path: '/blogDetail',
+      name: 'BlogDetail',
+      component: BlogDetail
     }
   ]
 })

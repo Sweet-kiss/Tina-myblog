@@ -12,8 +12,8 @@
      </div>
      <ul class="list_wrp">
      	<li v-for="(item,index) in blogLists">
-     		<p>{{item.title}}</p>
-     		<p>{{item.content}}</p>
+     		<p @click="toDetail(index)">{{item.title}}</p>
+     		<p @click="toDetail(index)">{{item.content}}</p>
        <div>
        	  <span>{{item.createtime}}</span>
        	  <span @click="del(index)">删除</span>
@@ -21,39 +21,50 @@
        </div>
      	</li>
      </ul>
+  <modal-fom v-show="isShow2" :msg="msg"></modal-fom>
   </div>
 </template>
 
 <script>
+import ModalFom from '@/components/base/modal/modal'
 export default {
+ components: {
+    ModalFom
+	},
   data () {
   	return {
-  		blogLists: "",
-  		searchText: "",
-  		isShow: false
+		blogLists: "",
+		searchText: "",
+		isShow: false,
+		isShow2: false,
+		msg: ""
   	}
   },
   created () {
   	this._getBlogLists()
   },
   methods: {
-	  	_getBlogLists () {
-	  	  let  _this = this;
-	      let url="/api/blog/list?isadmin=1";
-	      console.log(url)
-		  this.$axios({
-		    method: 'get',
-		    url: url,               
-		  }).then(function(res){
-		    //console.log(res.data)
-		    _this.blogLists = res.data.data;
-		    console.log(_this.blogLists)
-		  }).catch(function(err){
-		         console.log(err)
-		  })
+  	_getBlogLists () {
+  	  let  _this = this;
+      let url="/api/blog/list?isadmin=1";
+      console.log(url)
+	  this.$axios({
+	    method: 'get',
+	    url: url,               
+	  }).then(function(res){
+	    //console.log(res.data)
+	    _this.blogLists = res.data.data;
+	    console.log(_this.blogLists)
+	  }).catch(function(err){
+	         console.log(err)
+	  })
   	},
   	addNew () {
   		this.$router.push({path: '/addList'})
+  	},
+  	toDetail(index){
+  		let list_id = this.blogLists[index].id
+  		this.$router.push({path: '/blogDetail', query:{id: list_id}})      
   	},
   	edit(index){
   		let list_id = this.blogLists[index].id
@@ -70,7 +81,14 @@ export default {
 		    console.log(res.data)
 		    let code = res.data.errno
 		    if(code==0){
-          alert("删除成功！")
+          //alert("删除成功！")
+          _this.isShow = true
+          _this.msg = "删除成功!"
+
+          setTimeout(function(){ 
+          	   _this.isShow = false
+			    		 _this._getBlogLists()
+			    	}, 1000);
           _this._getBlogLists()
 		    }
 		  }).catch(function(err){
@@ -187,6 +205,13 @@ export default {
 	line-height: 20px;
 	color: #a8a6a6;
 	margin-bottom: 10px;
+  text-overflow: -o-ellipsis-lastline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 .list_wrp li span:first-child {
   font-size: 13px;

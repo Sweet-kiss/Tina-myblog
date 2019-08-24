@@ -6,15 +6,22 @@
     	<div class="blog_desc"><textarea v-model="content" name="" id="" cols="30" rows="10"></textarea></div>
     </div>
     <div class="login_btn" @click="addBlogList">提交</div>
+    <modal-fom v-show="isShow" :msg="msg"></modal-fom>
   </div>
 </template>
 
 <script>
+import ModalFom from '@/components/base/modal/modal'	
 export default {
+	components: {
+    ModalFom
+	},	
 	data () {
     return {
     	 title: '',
-    	 content: ''
+    	 content: '',
+    	 isShow: false,
+    	 msg:""
     }
 	},
 	methods: {
@@ -38,8 +45,20 @@ export default {
 			    console.log(res.data)
 			    var result = res.data
 			    if(result.errno==0) {
-			    	alert("插入成功！")
-            _this.$router.push({path: '/bloglist'})
+			    	//alert("插入成功！")
+			    	_this.isShow = true	
+			    	_this.msg = "添加成功！"
+
+			    	setTimeout(function(){ 
+			    		_this.$router.push({path:'/bloglist'})
+			    	}, 1000)
+			    }else{
+			    	_this.isShow = true	
+			    	_this.msg = "添加失败！"
+			    	setTimeout(function(){ 
+			    		_this.isShow = false
+			    		_this.$router.push({path:'/addList'})
+			    	}, 1000)
 			    }
 
 			  }).catch(function(err){

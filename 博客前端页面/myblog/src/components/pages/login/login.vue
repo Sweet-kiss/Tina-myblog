@@ -50,12 +50,20 @@ export default {
 			    let Err_ok = res.data.errno
 			    if(Err_ok==0){
 			    	//alert("登录成功");
-			    	_this.isShow = true			    	
+			    	_this.isShow = true	
+			    	_this.msg = "登录成功！"		    	
 			    	setTimeout(function(){ 
 			    		_this.$router.push({path:'/bloglist'})
 			    	}, 1000);
 			    }else {
-			    	alert("登录失败！")
+			    	_this.isShow = true
+			    	_this.msg = "登录失败！"
+			    	setTimeout(function(){ 
+			    	_this.isShow = false	
+			    	_this.$router.push({path:'/login'})
+			    	_this.username = ""
+			    	_this.password = ""
+			    	}, 1000);			    	
 			    }
 
 			  }).catch(function(err){
